@@ -1,12 +1,17 @@
 examples.standardize.stages.yaml = function() {
   setwd("D:/libraries/XEconDB/examples")
   file = "ug_stages.yaml"
+  library(yaml)
   li = yaml.load_file(file)
   tt = table.tree(li)
   library(dplyr)
   n = filter(tt, name=="payoff", level==3)$num.rows[1]-1
   
   tt.find.subtree(tt,name=="stages")
+  
+  tt = table.tree(li)  
+  st = tt.find.subtree(tt, name=="stages", level==1, .assert.num=1)
+
   
   tt.find(tt, name=="payoff", level=3)
 }
@@ -83,7 +88,7 @@ tt.obj.li = function(tt) {
 
 #' Extract subtree (as a table tree) starting at the specified row of a table tree
 tt.subtree = function(tt,row) {
-  rows = ind:(ind+tt$num.rows[row]-1)
+  rows = row:(row+tt$num.rows[row]-1)
   new.tt = tt[rows,]
   attr(new.tt,"obj.li") <- tt.obj.li(tt)[rows]
   
@@ -95,8 +100,17 @@ tt.subtree = function(tt,row) {
 }
 
 #' Find rows of a table tree using filter on tt
-tt.find.rows = function(tt,...) {
-  filter(tt,...)$row.ind
+tt.find.rows = function(tt,...,.assert.num=NULL) {
+  rows = filter(tt,...)$row.ind
+  if (!is.null(.assert.num))
+    tt.assert(tt,rows,.assert.num=.assert.num)
+  rows
+}
+
+tt.assert = function(tt, rows,...,.assert.num=1) {
+  if (length(rows)!=.assert.num) 
+    stop("Wrong number of rows found!")
+  
 }
 
 #' Find objects of a table tree using filter on tt

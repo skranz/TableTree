@@ -7,3 +7,4 @@ Author: Sebastian Kranz
 Maintainer: Sebastian Kranz <sebastian.kranz@uni-ulm.de>
 Description: Describe a tree data structure as a data frame an conveniently access elements.
 License: GPL >= 2.0
+Depends: data.table, dplyr
