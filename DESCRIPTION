@@ -1,0 +1,9 @@
+Package: TableTree
+Type: Package
+Title: Tree structures as data frame
+Version: 1.0
+Date: 2014-11-09
+Author: Sebastian Kranz
+Maintainer: Sebastian Kranz <sebastian.kranz@uni-ulm.de>
+Description: Describe a tree data structure as a data frame an conveniently access elements.
+License: GPL >= 2.0
