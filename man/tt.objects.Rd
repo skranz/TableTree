@@ -3,7 +3,7 @@
 \alias{tt.objects}
 \title{Extract list of objects in the specified rows of a table tree}
 \usage{
-tt.objects(tt, rows)
+tt.objects(tt, rows = NULL)
 }
 \description{
 Extract list of objects in the specified rows of a table tree

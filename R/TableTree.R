@@ -40,9 +40,10 @@ list.tree.to.object.list = function(li) {
 }
 
 
-add.list.tree.to.table = function(li, tab, row=1L, name="", level=0,parent=0) {
+add.list.tree.to.table = function(li, tab, row=1L, name="", level=0,parent=0,pos.as.child=1,num.children=0) {
   row = as.integer(row)
   num.rows = 1L
+  num.children=0L
   if (is.list(li) & length(li)>0) {
     n = length(li)
     names = names(li)
@@ -50,26 +51,31 @@ add.list.tree.to.table = function(li, tab, row=1L, name="", level=0,parent=0) {
     srow=row+1L
     for (i in 1:n) {
       #restore.point("before")
-      sub.num.rows = add.list.tree.to.table(li[[i]],tab,srow,names[i],level=level+1, parent=row)
+      sub.num.rows = add.list.tree.to.table(li[[i]],tab,srow,names[i],level=level+1, parent=row, pos.as.child=i)
       #restore.point("after")
       
       srow=srow+sub.num.rows
       num.rows = num.rows+sub.num.rows
     }
+    num.children = length(li)
   }
   set(tab,row,2L,name)
   set(tab,row,3L,parent)
-  set(tab,row,4L,num.rows)
-  set(tab,row,5L,level)
+  set(tab,row,4L,level)
+  set(tab,row,5L,num.rows)
+  set(tab,row,6L,num.children)
+  set(tab,row,7L,pos.as.child)
+
+  
   return(num.rows)
 }
 
 #' Make a table tree from a list tree
-table.tree = function(li, add.obj.li = TRUE) {
+table.tree = function(li,name="", add.obj.li = TRUE) {
   nrows = list.tree.length(li)
   library(data.table)
-  tab = data.table(row.ind=1:nrows,name=rep("",nrows),parent=0,num.rows=0, level=0)
-  add.list.tree.to.table(li,tab,name="game")
+  tab = data.table(row.ind=1:nrows,name=rep("",nrows),parent=0,level=0,num.rows=0, num.children=0, pos.as.child=0)
+  add.list.tree.to.table(li,tab,name=name)
   if (add.obj.li) {
     obj.li = list.tree.to.object.list(li)
     attr(tab,"obj.li") = obj.li
@@ -78,12 +84,14 @@ table.tree = function(li, add.obj.li = TRUE) {
 }
 
 #' Extract the object in the specified row of a table tree
-tt.object = function(tt,row) {
+tt.object = function(tt,row=1) {
   attr(tt,"obj.li")[[row]]
 }
 
 #' Extract list of objects in the specified rows of a table tree
-tt.objects = function(tt,rows) {
+tt.objects = function(tt,rows=NULL) {
+  if (is.null(rows))
+    return(attr(tt,"obj.li"))  
   attr(tt,"obj.li")[rows]
 }
 
@@ -93,7 +101,7 @@ tt.obj.li = function(tt) {
 }
 
 #' Extract subtree (as a table tree) starting at the specified row of a table tree
-tt.subtree = function(tt,row) {
+tt.subtree = function(tt,row=1) {
   rows = row:(row+tt$num.rows[row]-1)
   new.tt = tt[rows,]
   attr(new.tt,"obj.li") <- tt.obj.li(tt)[rows]
@@ -140,3 +148,19 @@ tt.find.subtree = function(tt,...) {
     return(NULL)
   tt.subtree(tt,rows[1])
 }
+
+
+
+#' Add additional columns to a table.tree by applying fun on each object in obj.li
+tt.add.extra.cols = function(tt, fun, obj.li = tt.obj.li(tt)) {
+  li = lapply(obj.li, fun)
+  edt = rbindlist(li)
+  colnames = c("row.ind", "name", colnames(edt), colnames(tt)[-(1:2)])
+
+  tt = cbind(tt,edt)
+  setcolorder(tt, colnames)
+  
+  attr(tt,"obj.li") <- obj.li
+  tt
+}
+

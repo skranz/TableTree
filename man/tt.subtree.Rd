@@ -3,7 +3,7 @@
 \alias{tt.subtree}
 \title{Extract subtree (as a table tree) starting at the specified row of a table tree}
 \usage{
-tt.subtree(tt, row)
+tt.subtree(tt, row = 1)
 }
 \description{
 Extract subtree (as a table tree) starting at the specified row of a table tree

@@ -3,7 +3,7 @@
 \alias{tt.object}
 \title{Extract the object in the specified row of a table tree}
 \usage{
-tt.object(tt, row)
+tt.object(tt, row = 1)
 }
 \description{
 Extract the object in the specified row of a table tree

@@ -3,7 +3,7 @@
 \alias{table.tree}
 \title{Make a table tree from a list tree}
 \usage{
-table.tree(li, add.obj.li = TRUE)
+table.tree(li, name = "", add.obj.li = TRUE)
 }
 \description{
 Make a table tree from a list tree
