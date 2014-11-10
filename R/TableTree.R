@@ -17,7 +17,7 @@ examples.standardize.stages.yaml = function() {
 }
 
 list.tree.length = function(li) {
-  restore.point("list.tree.length")
+  #restore.point("list.tree.length")
   if (is.list(li)) {
     if (length(li)==0)
       return(1)
@@ -43,13 +43,16 @@ list.tree.to.object.list = function(li) {
 add.list.tree.to.table = function(li, tab, row=1L, name="", level=0,parent=0) {
   row = as.integer(row)
   num.rows = 1L
-  if (is.list(li)) {
+  if (is.list(li) & length(li)>0) {
     n = length(li)
     names = names(li)
     rows = as.integer((row+1):(row+n))
     srow=row+1L
     for (i in 1:n) {
+      #restore.point("before")
       sub.num.rows = add.list.tree.to.table(li[[i]],tab,srow,names[i],level=level+1, parent=row)
+      #restore.point("after")
+      
       srow=srow+sub.num.rows
       num.rows = num.rows+sub.num.rows
     }
