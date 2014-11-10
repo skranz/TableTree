@@ -17,7 +17,10 @@ examples.standardize.stages.yaml = function() {
 }
 
 list.tree.length = function(li) {
+  restore.point("list.tree.length")
   if (is.list(li)) {
+    if (length(li)==0)
+      return(1)
     lens = sapply(li,list.tree.length)
     return(1+sum(lens))
   }
