@@ -41,12 +41,16 @@ list.tree.to.object.list = function(li) {
 
 
 add.list.tree.to.table = function(li, tab, row=1L, name="", level=0,parent=0,pos.as.child=1,num.children=0) {
+  restore.point("add.list.tree.to.table")
   row = as.integer(row)
   num.rows = 1L
   num.children=0L
   if (is.list(li) & length(li)>0) {
     n = length(li)
     names = names(li)
+    if (is.null(names))
+      names = paste0("_UNNAMED_",1:n)
+    
     rows = as.integer((row+1):(row+n))
     srow=row+1L
     for (i in 1:n) {
@@ -59,6 +63,8 @@ add.list.tree.to.table = function(li, tab, row=1L, name="", level=0,parent=0,pos
     }
     num.children = length(li)
   }
+  restore.point("add.list.tree.to.table_1")
+
   set(tab,row,2L,name)
   set(tab,row,3L,parent)
   set(tab,row,4L,level)
