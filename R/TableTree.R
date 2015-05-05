@@ -84,6 +84,7 @@ table.tree = function(li,name="", add.obj.li = TRUE) {
   add.list.tree.to.table(li,tab,name=name)
   if (add.obj.li) {
     obj.li = list.tree.to.object.list(li)
+    names(obj.li) = tab$name
     attr(tab,"obj.li") = obj.li
   }
   tab
@@ -135,13 +136,17 @@ tt.assert = function(tt, rows,...,.assert.num=1) {
 
 #' Find objects of a table tree using filter on tt
 tt.find.objects = function(tt,...) {
-  rows = tt.find.rows(tt,...)
+  rows = filter(tt,...)$row.ind
+
+  #rows = tt.find.rows(tt,...)
   tt.objects[[rows]]
 }
 
 #' Find first object of a table tree using filter on tt
 tt.find.object = function(tt,...) {
-  rows = tt.find.rows(tt,...)
+  #browser()
+  rows = filter(tt,...)$row.ind
+  #rows = tt.find.rows(tt,...)
   if (length(rows)==0)
     return(NULL)
   tt.object(tt,rows[1])
@@ -149,7 +154,8 @@ tt.find.object = function(tt,...) {
 
 #' Find first subtree of a table tree using filter on tt
 tt.find.subtree = function(tt,...) {
-  rows = tt.find.rows(tt,...)
+  rows = filter(tt,...)$row.ind
+  #rows = tt.find.rows(tt,...)
   if (length(rows)==0)
     return(NULL)
   tt.subtree(tt,rows[1])
